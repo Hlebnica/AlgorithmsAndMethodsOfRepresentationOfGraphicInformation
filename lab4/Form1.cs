@@ -164,7 +164,9 @@ namespace lab4
                     newItem = new ItemForDrawing(new Point(x1, y1), text);
                     break;
                 default:
-                    return;
+                    // По умолчанию точка
+                    newItem = new ItemForDrawing(new Point(x1, y1));
+                    break;
             }
 
             // Вызыв метода DrawObject для отображения объекта на холсте
