@@ -223,5 +223,10 @@ namespace lab4
                     break;
             }
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }
