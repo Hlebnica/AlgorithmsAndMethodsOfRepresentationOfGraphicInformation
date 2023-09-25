@@ -180,12 +180,24 @@ namespace lab4
             pictureBox1.Invalidate();
         }
 
+        // Очистка текстовых полей
+        private void Clear_TextBox()
+        {
+            textBox_X1.Clear();
+            textBox_Y1.Clear();
+            textBox_X2.Clear();
+            textBox_Y2.Clear();
+            textBox_Width.Clear();
+            textBox_Height.Clear();
+            textBox_TextObject.Clear();
+        }
+
         private void comboBox_DrawingObject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Получаем выбранный тип объекта из ComboBox
+            // Получить выбранный тип объекта из ComboBox
             ItemForDrawing.TypeOfObject objectType = (ItemForDrawing.TypeOfObject)comboBox_DrawingObject.SelectedIndex;
 
-            // Отключаем все textBox по умолчанию
+            // Отключить все textBox по умолчанию
             textBox_X1.Enabled = false;
             textBox_Y1.Enabled = false;
             textBox_X2.Enabled = false;
@@ -194,14 +206,16 @@ namespace lab4
             textBox_Height.Enabled = false;
             textBox_TextObject.Enabled = false;
 
-            // Включаем только те textBox, которые необходимы для выбранного типа объекта
+            // Включить только те textBox, которые необходимы для выбранного типа объекта
             switch (objectType)
             {
                 case TypeOfObject.Point:
+                    Clear_TextBox();
                     textBox_X1.Enabled = true;
                     textBox_Y1.Enabled = true;
                     break;
                 case TypeOfObject.Line:
+                    Clear_TextBox();
                     textBox_X1.Enabled = true;
                     textBox_Y1.Enabled = true;
                     textBox_X2.Enabled = true;
@@ -209,12 +223,14 @@ namespace lab4
                     break;
                 case TypeOfObject.Rectangle:
                 case TypeOfObject.Ellipse:
+                    Clear_TextBox();
                     textBox_X1.Enabled = true;
                     textBox_Y1.Enabled = true;
                     textBox_Width.Enabled = true;
                     textBox_Height.Enabled = true;
                     break;
                 case TypeOfObject.String:
+                    Clear_TextBox();
                     textBox_X1.Enabled = true;
                     textBox_Y1.Enabled = true;
                     textBox_TextObject.Enabled = true;
