@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static lab4.Form1.ItemForDrawing;
 
@@ -13,18 +7,17 @@ namespace lab4
 {
     public partial class Form1 : Form
     {
-        ItemForDrawing object_;
-        Bitmap bitmap;
-        Brush brushForDrawRectangle;
-        Color color;
-        int weightOfLine;
-        Graphics graphics;
+        private Bitmap bitmap;
+        private Brush brushForDrawRectangle;
+        private Color color;
+        private int weightOfLine;
+        private Graphics graphics;
 
         public Form1()
         {
             InitializeComponent();
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            pictureBox1.Image = (Image)bitmap;
+            pictureBox1.Image = bitmap;
             pictureBox1.BackgroundImageLayout = ImageLayout.None;
             brushForDrawRectangle = Brushes.Black;
             color = Color.Black;
@@ -141,7 +134,7 @@ namespace lab4
             string text = textBox_TextObject.Text;
 
             // Получить выбранный тип объекта из ComboBox
-            ItemForDrawing.TypeOfObject objectType = (ItemForDrawing.TypeOfObject)comboBox_DrawingObject.SelectedIndex;
+            TypeOfObject objectType = (TypeOfObject)comboBox_DrawingObject.SelectedIndex;
 
             // Создать объект ItemForDrawing в зависимости от выбранного типа
             ItemForDrawing newItem;
