@@ -67,17 +67,28 @@ namespace _2_Affine_transformations
         {
             if (textBox_Rotate.Text == "") return;
             float angle = ConvertToRadians(float.Parse(textBox_Rotate.Text));
-            //MessageBox.Show(Convert.ToString(angle));
 
-            for (int i = 0; i < _currentPoints.Count; i++)
+            List<PointF> tempPoints = new List<PointF>(_currentPoints);
+
+            for (int i = 0; i < tempPoints.Count; i++)
             {
-                float newX = (float)(_currentPoints[i].X * Math.Cos(angle) - _currentPoints[i].Y * Math.Sin(angle) - (_currentPoints[0].X * Math.Cos(angle) - _currentPoints[0].Y * Math.Sin(angle)) + _currentPoints[0].X);
-                float newY = (float)(_currentPoints[i].X * Math.Sin(angle) + _currentPoints[i].Y * Math.Cos(angle) - (_currentPoints[0].X * Math.Sin(angle) + _currentPoints[0].Y * Math.Cos(angle)) + _currentPoints[0].Y);
-                _currentPoints[i] = new PointF(newX, newY);
+                float newX = (float)(tempPoints[i].X * Math.Cos(angle) - tempPoints[i].Y * Math.Sin(angle) - (tempPoints[0].X * Math.Cos(angle) - tempPoints[0].Y * Math.Sin(angle)) + tempPoints[0].X);
+                float newY = (float)(tempPoints[i].X * Math.Sin(angle) + tempPoints[i].Y * Math.Cos(angle) - (tempPoints[0].X * Math.Sin(angle) + tempPoints[0].Y * Math.Cos(angle)) + tempPoints[0].Y);
+                tempPoints[i] = new PointF(newX, newY);
             }
 
-            DrawFigure();
+            if (!IsFigureOutOfBound(tempPoints))
+            {
+                _currentPoints = tempPoints;
+                DrawFigure();
+            }
+            else
+            {
+                MessageBox.Show("Фигура выходит за границы");
+            }
         }
+
+
 
         private float ConvertToRadians(double degrees)
         {
@@ -91,11 +102,24 @@ namespace _2_Affine_transformations
             int moveX = int.Parse(textBoxX_Move.Text);
             int moveY = int.Parse(textBoxY_Move.Text);
 
-            for (int i = 0; i < _currentPoints.Count; i++)
-                _currentPoints[i] = new PointF(_currentPoints[i].X + moveX, _currentPoints[i].Y + moveY);
+            List<PointF> tempPoints = new List<PointF>(_currentPoints);
 
-            DrawFigure();
+            for (int i = 0; i < tempPoints.Count; i++)
+            {
+                tempPoints[i] = new PointF(tempPoints[i].X + moveX, tempPoints[i].Y + moveY);
+            }
+
+            if (!IsFigureOutOfBound(tempPoints))
+            {
+                _currentPoints = tempPoints;
+                DrawFigure();
+            }
+            else
+            {
+                MessageBox.Show("Фигура выходит за границы");
+            }
         }
+
 
         // Растяжение/сжатие
         private void buttonScale_Click(object sender, EventArgs e)
@@ -104,28 +128,62 @@ namespace _2_Affine_transformations
             float scaleX = float.Parse(textBoxX_Scale.Text);
             float scaleY = float.Parse(textBoxY_Scale.Text);
 
-            // Поиск центра фигуры
-            PointF center = new PointF(0, 0);
-            for (int i = 0; i < _currentPoints.Count; i++)
-            {
-                center.X += _currentPoints[i].X;
-                center.Y += _currentPoints[i].Y;
-            }
-            center.X /= _currentPoints.Count;
-            center.Y /= _currentPoints.Count;
+            List<PointF> tempPoints = new List<PointF>(_currentPoints);
 
-            for (int i = 0; i < _currentPoints.Count; i++)
+            // Найдите центр фигуры
+            PointF center = new PointF(0, 0);
+            for (int i = 0; i < tempPoints.Count; i++)
+            {
+                center.X += tempPoints[i].X;
+                center.Y += tempPoints[i].Y;
+            }
+            center.X /= tempPoints.Count;
+            center.Y /= tempPoints.Count;
+
+            // Выполните масштабирование на временных точках
+            for (int i = 0; i < tempPoints.Count; i++)
             {
                 // Сдвиг точек относительно центра
-                _currentPoints[i] = new PointF(_currentPoints[i].X - center.X, _currentPoints[i].Y - center.Y);
+                tempPoints[i] = new PointF(tempPoints[i].X - center.X, tempPoints[i].Y - center.Y);
                 // Масштабирование
-                _currentPoints[i] = new PointF(_currentPoints[i].X * scaleX, _currentPoints[i].Y * scaleY);
+                tempPoints[i] = new PointF(tempPoints[i].X * scaleX, tempPoints[i].Y * scaleY);
                 // Возврат точек относительно центра
-                _currentPoints[i] = new PointF(_currentPoints[i].X + center.X, _currentPoints[i].Y + center.Y);
+                tempPoints[i] = new PointF(tempPoints[i].X + center.X, tempPoints[i].Y + center.Y);
             }
 
-            DrawFigure();
+            if (!IsFigureOutOfBound(tempPoints))
+            {
+                _currentPoints = tempPoints;
+                DrawFigure();
+            }
+            else
+            {
+                MessageBox.Show("Фигура выходит за границы");
+            }
         }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            textBox_Rotate.Text = "0";
+            textBoxX_Move.Text = "0";
+            textBoxY_Move.Text = "0";
+            textBoxX_Scale.Text = "1";
+            textBoxY_Scale.Text = "1";
+        }
+
+        private bool IsFigureOutOfBound(List<PointF> points)
+        {
+            foreach (var point in points)
+            {
+                if (point.X < 0 || point.X > pictureBoxForFigure.Width || point.Y < 0 || point.Y > pictureBoxForFigure.Height)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
     }
 }
