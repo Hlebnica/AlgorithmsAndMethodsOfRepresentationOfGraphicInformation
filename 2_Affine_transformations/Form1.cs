@@ -183,7 +183,5 @@ namespace _2_Affine_transformations
             }
             return false;
         }
-
-
     }
 }

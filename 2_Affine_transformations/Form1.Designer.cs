@@ -64,9 +64,9 @@
             this.groupBox1.Controls.Add(this.groupBox4);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Location = new System.Drawing.Point(16, 15);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(199, 645);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
@@ -77,9 +77,9 @@
             this.groupBox3.Controls.Add(this.buttonRotate);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Location = new System.Drawing.Point(8, 85);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox3.Size = new System.Drawing.Size(177, 148);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
@@ -88,7 +88,7 @@
             // textBox_Rotate
             // 
             this.textBox_Rotate.Location = new System.Drawing.Point(8, 44);
-            this.textBox_Rotate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Rotate.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Rotate.Name = "textBox_Rotate";
             this.textBox_Rotate.Size = new System.Drawing.Size(155, 22);
             this.textBox_Rotate.TabIndex = 1;
@@ -96,7 +96,7 @@
             // buttonRotate
             // 
             this.buttonRotate.Location = new System.Drawing.Point(8, 82);
-            this.buttonRotate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonRotate.Margin = new System.Windows.Forms.Padding(4);
             this.buttonRotate.Name = "buttonRotate";
             this.buttonRotate.Size = new System.Drawing.Size(156, 53);
             this.buttonRotate.TabIndex = 3;
@@ -117,7 +117,7 @@
             // buttonCreateFigure
             // 
             this.buttonCreateFigure.Location = new System.Drawing.Point(8, 17);
-            this.buttonCreateFigure.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonCreateFigure.Margin = new System.Windows.Forms.Padding(4);
             this.buttonCreateFigure.Name = "buttonCreateFigure";
             this.buttonCreateFigure.Size = new System.Drawing.Size(177, 60);
             this.buttonCreateFigure.TabIndex = 0;
@@ -133,9 +133,9 @@
             this.groupBox4.Controls.Add(this.buttonScale);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Location = new System.Drawing.Point(8, 441);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox4.Size = new System.Drawing.Size(177, 193);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
@@ -144,7 +144,7 @@
             // textBoxY_Scale
             // 
             this.textBoxY_Scale.Location = new System.Drawing.Point(8, 91);
-            this.textBoxY_Scale.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxY_Scale.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxY_Scale.Name = "textBoxY_Scale";
             this.textBoxY_Scale.Size = new System.Drawing.Size(155, 22);
             this.textBoxY_Scale.TabIndex = 1;
@@ -152,7 +152,7 @@
             // textBoxX_Scale
             // 
             this.textBoxX_Scale.Location = new System.Drawing.Point(8, 38);
-            this.textBoxX_Scale.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxX_Scale.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxX_Scale.Name = "textBoxX_Scale";
             this.textBoxX_Scale.Size = new System.Drawing.Size(155, 22);
             this.textBoxX_Scale.TabIndex = 1;
@@ -170,7 +170,7 @@
             // buttonScale
             // 
             this.buttonScale.Location = new System.Drawing.Point(8, 123);
-            this.buttonScale.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonScale.Margin = new System.Windows.Forms.Padding(4);
             this.buttonScale.Name = "buttonScale";
             this.buttonScale.Size = new System.Drawing.Size(156, 53);
             this.buttonScale.TabIndex = 3;
@@ -196,9 +196,9 @@
             this.groupBox2.Controls.Add(this.buttonMoveFigure);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(8, 240);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(177, 193);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
@@ -207,7 +207,7 @@
             // textBoxY_Move
             // 
             this.textBoxY_Move.Location = new System.Drawing.Point(8, 91);
-            this.textBoxY_Move.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxY_Move.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxY_Move.Name = "textBoxY_Move";
             this.textBoxY_Move.Size = new System.Drawing.Size(155, 22);
             this.textBoxY_Move.TabIndex = 1;
@@ -215,7 +215,7 @@
             // textBoxX_Move
             // 
             this.textBoxX_Move.Location = new System.Drawing.Point(8, 38);
-            this.textBoxX_Move.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxX_Move.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxX_Move.Name = "textBoxX_Move";
             this.textBoxX_Move.Size = new System.Drawing.Size(155, 22);
             this.textBoxX_Move.TabIndex = 1;
@@ -233,7 +233,7 @@
             // buttonMoveFigure
             // 
             this.buttonMoveFigure.Location = new System.Drawing.Point(8, 123);
-            this.buttonMoveFigure.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonMoveFigure.Margin = new System.Windows.Forms.Padding(4);
             this.buttonMoveFigure.Name = "buttonMoveFigure";
             this.buttonMoveFigure.Size = new System.Drawing.Size(156, 53);
             this.buttonMoveFigure.TabIndex = 3;
@@ -257,7 +257,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxForFigure.Location = new System.Drawing.Point(254, 32);
-            this.pictureBoxForFigure.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxForFigure.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBoxForFigure.Name = "pictureBoxForFigure";
             this.pictureBoxForFigure.Size = new System.Drawing.Size(1054, 681);
             this.pictureBoxForFigure.TabIndex = 1;
@@ -303,7 +303,7 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.pictureBoxForFigure);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Аффинные преобразования Lab2 Старостенок Дмитрий";
             this.Load += new System.EventHandler(this.Form1_Load);
