@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AlgorithmsForColoringClosedContours
@@ -10,15 +11,18 @@ namespace AlgorithmsForColoringClosedContours
         private Bitmap _bitmap;
         private List<PointF> _mainPoints = new List<PointF>
         {
-            new PointF(300, 200),
-            new PointF(360, 300),
-            new PointF(420, 200),
-            new PointF(480, 300),
-            new PointF(360, 300),
-            new PointF(480, 300),
+            new PointF(0, 0),
+            new PointF(120, 200),
+            new PointF(240, 0),
+            new PointF(360, 200),
+            //new PointF(120, 200),
+            //new PointF(360, 200),
         };
         private List<PointF> _currentPoints = new List<PointF>();
         private Color _fillColor = ColorTranslator.FromHtml("#0008FF");
+
+        private int selectedX = -1;
+        private int selectedY = -1;
 
         public Form1()
         {
@@ -69,12 +73,12 @@ namespace AlgorithmsForColoringClosedContours
         {
             _currentPoints = new List<PointF>
             {
-                new PointF(300, 200),
-                new PointF(360, 300),
-                new PointF(420, 200),
-                new PointF(480, 300),
-                new PointF(360, 300),
-                new PointF(480, 300),
+                new PointF(0, 0),
+                new PointF(120, 200),
+                new PointF(240, 0),
+                new PointF(360, 200),
+                //new PointF(120, 200),
+                //new PointF(360, 200),
             };
         }
 
@@ -90,7 +94,61 @@ namespace AlgorithmsForColoringClosedContours
 
         private void buttonSeedFilling_Click(object sender, EventArgs e)
         {
+            int startX = selectedX; 
+            int startY = selectedY;
 
+            if (!IsPointInPolygon(startX, startY, _currentPoints))
+            {
+                MessageBox.Show("Выбранная точка не соответствует условиям.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Color targetColor = _bitmap.GetPixel(startX, startY);
+
+            Stack<Point> pixelsToFill = new Stack<Point>();
+            pixelsToFill.Push(new Point(startX, startY));
+
+            while (pixelsToFill.Count > 0)
+            {
+                Point currentPixel = pixelsToFill.Pop();
+                int x = currentPixel.X;
+                int y = currentPixel.Y;
+
+                if (x >= 0 && x < _bitmap.Width && y >= 0 && y < _bitmap.Height && _bitmap.GetPixel(x, y) == targetColor)
+                {
+                    _bitmap.SetPixel(x, y, _fillColor);
+
+                    pictureBoxForFigure.Refresh();
+
+                    pixelsToFill.Push(new Point(x + 1, y));
+                    pixelsToFill.Push(new Point(x - 1, y));
+                    pixelsToFill.Push(new Point(x, y + 1));
+                    pixelsToFill.Push(new Point(x, y - 1));
+                }
+            }
+        }
+
+        private void pictureBoxForFigure_MouseClick(object sender, MouseEventArgs e)
+        {
+            selectedX = e.X;
+            selectedY = e.Y;
+        }
+
+        private bool IsPointInPolygon(int x, int y, List<PointF> polygon)
+        {
+            int crossings = 0;
+            for (int i = 0; i < polygon.Count; i++)
+            {
+                PointF p1 = polygon[i];
+                PointF p2 = polygon[(i + 1) % polygon.Count];
+                if (p1.Y <= y && p2.Y > y || p1.Y > y && p2.Y <= y)
+                {
+                    float vt = (float)(y - p1.Y) / (p2.Y - p1.Y);
+                    if (x < p1.X + vt * (p2.X - p1.X))
+                        crossings++;
+                }
+            }
+            return (crossings % 2 == 1);
         }
 
         private void buttonLineByLineFilling_Click(object sender, EventArgs e)
