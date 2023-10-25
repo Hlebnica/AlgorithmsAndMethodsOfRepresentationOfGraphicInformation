@@ -11,10 +11,10 @@ namespace AlgorithmsForColoringClosedContours
         private Bitmap _bitmap;
         private List<PointF> _mainPoints = new List<PointF>
         {
-            new PointF(0, 0),
-            new PointF(120, 200),
-            new PointF(240, 0),
-            new PointF(360, 200),
+            new PointF(200, 200),
+            new PointF(320, 400),
+            new PointF(440, 200),
+            new PointF(560, 400),
             //new PointF(120, 200),
             //new PointF(360, 200),
         };
@@ -73,10 +73,10 @@ namespace AlgorithmsForColoringClosedContours
         {
             _currentPoints = new List<PointF>
             {
-                new PointF(0, 0),
-                new PointF(120, 200),
-                new PointF(240, 0),
-                new PointF(360, 200),
+                new PointF(200, 200),
+                new PointF(320, 400),
+                new PointF(440, 200),
+                new PointF(560, 400),
                 //new PointF(120, 200),
                 //new PointF(360, 200),
             };
