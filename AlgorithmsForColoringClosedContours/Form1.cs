@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,8 +16,6 @@ namespace AlgorithmsForColoringClosedContours
             new PointF(320, 400),
             new PointF(440, 200),
             new PointF(560, 400),
-            //new PointF(120, 200),
-            //new PointF(360, 200),
         };
         private List<PointF> _currentPoints = new List<PointF>();
         private Color _fillColor = ColorTranslator.FromHtml("#0008FF");
@@ -77,13 +76,11 @@ namespace AlgorithmsForColoringClosedContours
                 new PointF(320, 400),
                 new PointF(440, 200),
                 new PointF(560, 400),
-                //new PointF(120, 200),
-                //new PointF(360, 200),
             };
         }
 
         // Выбор цвета
-        private void buttonColorPicker_Click(object sender, EventArgs e) 
+        private void buttonColorPicker_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
             if (colorDialog.ShowDialog() == DialogResult.OK)
@@ -94,7 +91,7 @@ namespace AlgorithmsForColoringClosedContours
 
         private void buttonSeedFilling_Click(object sender, EventArgs e)
         {
-            int startX = selectedX; 
+            int startX = selectedX;
             int startY = selectedY;
 
             if (!IsPointInPolygon(startX, startY, _currentPoints))
@@ -153,7 +150,127 @@ namespace AlgorithmsForColoringClosedContours
 
         private void buttonLineByLineFilling_Click(object sender, EventArgs e)
         {
+            int startX = selectedX;
+            int startY = selectedY;
 
+            if (startX >= 0 && startX < pictureBoxForFigure.Width && startY >= 0 && startY < pictureBoxForFigure.Height && IsPointInPolygon(startX, startY, _currentPoints))
+            {
+                LineByLineFill(startX, startY);
+            }
+            else
+            {
+                MessageBox.Show("Выбранная точка не соответствует условиям.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        private async void LineByLineFill(int startX, int startY)
+        {
+            Color targetColor = _bitmap.GetPixel(startX, startY);
+            Stack<Point> stack = new Stack<Point>();
+            stack.Push(new Point(startX, startY));
+
+            while (stack.Count > 0)
+            {
+                Point current = stack.Pop();
+                int x = current.X;
+                int y = current.Y;
+
+                while (x >= 0 && _bitmap.GetPixel(x, y) == targetColor)
+                {
+                    x--;
+                }
+                x++;
+
+                bool spanAbove = false;
+                bool spanBelow = false;
+
+                while (x < _bitmap.Width && _bitmap.GetPixel(x, y) == targetColor)
+                {
+                    _bitmap.SetPixel(x, y, _fillColor);
+
+                    if (!spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) == targetColor)
+                    {
+                        stack.Push(new Point(x, y - 1));
+                        spanAbove = true;
+                    }
+                    else if (spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) != targetColor)
+                    {
+                        spanAbove = false;
+                    }
+
+                    if (!spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) == targetColor)
+                    {
+                        stack.Push(new Point(x, y + 1));
+                        spanBelow = true;
+                    }
+                    else if (spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) != targetColor)
+                    {
+                        spanBelow = false;
+                    }
+
+                    x++;
+
+                    pictureBoxForFigure.Invalidate();
+                    await Task.Delay(1); 
+                }
+            }
+
+            pictureBoxForFigure.Invalidate();
+        }
+
+        /*
+        private void LineByLineFill(int startX, int startY)
+        {
+            Color targetColor = _bitmap.GetPixel(startX, startY);
+            Stack<Point> stack = new Stack<Point>();
+            stack.Push(new Point(startX, startY));
+
+            while (stack.Count > 0)
+            {
+                Point current = stack.Pop();
+                int x = current.X;
+                int y = current.Y;
+
+                while (x >= 0 && _bitmap.GetPixel(x, y) == targetColor)
+                {
+                    x--;
+                }
+                x++; // Восстановите правильное положение
+
+                bool spanAbove = false;
+                bool spanBelow = false;
+
+                while (x < _bitmap.Width && _bitmap.GetPixel(x, y) == targetColor)
+                {
+                    _bitmap.SetPixel(x, y, _fillColor);
+
+                    if (!spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) == targetColor)
+                    {
+                        stack.Push(new Point(x, y - 1));
+                        spanAbove = true;
+                    }
+                    else if (spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) != targetColor)
+                    {
+                        spanAbove = false;
+                    }
+
+                    if (!spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) == targetColor)
+                    {
+                        stack.Push(new Point(x, y + 1));
+                        spanBelow = true;
+                    }
+                    else if (spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) != targetColor)
+                    {
+                        spanBelow = false;
+                    }
+
+                    x++;
+                }
+            }
+
+            pictureBoxForFigure.Invalidate();
+        }
+
+        */
     }
 }
