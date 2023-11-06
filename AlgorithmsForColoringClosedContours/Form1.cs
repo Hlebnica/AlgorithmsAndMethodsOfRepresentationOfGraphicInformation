@@ -178,15 +178,20 @@ namespace AlgorithmsForColoringClosedContours
             if (selectedX == -1 || selectedY == -1 || !IsPointInPolygon(selectedX, selectedY, _currentPoints))
             {
                 MessageBox.Show("Выберите точку внутри фигуры для начала заливки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return; 
             }
 
-            Color targetColor = _bitmap.GetPixel(selectedX, selectedY); // Получение цвета пикселя в начальной точке
-            Queue<Point> nodes = new Queue<Point>(); // Создание стека для хранения пикселей, которые нужно закрасить
+            // Получение цвета пикселя в начальной точке для определения цвета, который будет заменяться
+            Color targetColor = _bitmap.GetPixel(selectedX, selectedY);
+            // Создание очереди для хранения точек, которые нужно закрасить
+            Queue<Point> nodes = new Queue<Point>();
+            // Добавление начальной точки в очередь
             nodes.Enqueue(new Point(selectedX, selectedY));
 
+            // Цикл выполняется, пока в очереди есть точки для заливки
             while (nodes.Count > 0)
             {
+                // Извлечение точки из очереди
                 Point node = nodes.Dequeue();
                 int x = node.X;
                 int y = node.Y;
@@ -194,43 +199,52 @@ namespace AlgorithmsForColoringClosedContours
                 // Поиск крайней левой точки горизонтальной линии
                 while (x > 0 && _bitmap.GetPixel(x - 1, y) == targetColor)
                 {
-                    x--;
+                    x--; // Сдвиг влево
                 }
 
+                // Инициализация переменных для отслеживания продолжения заливки сверху и снизу текущей линии
                 bool spanAbove = false;
                 bool spanBelow = false;
 
-                // Проход вправо от найденной крайней левой точки, заливка и определение точек для следующих строк
+                // Проход вправо от найденной крайней левой точки, закрашивая пиксели и проверяя верхнюю и нижнюю границы
                 while (x < _bitmap.Width && _bitmap.GetPixel(x, y) == targetColor)
                 {
+                    // Закраска текущего пикселя
                     _bitmap.SetPixel(x, y, _fillColor);
 
+                    // Проверка и добавление точек для заливки сверху текущей линии
                     if (!spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) == targetColor)
                     {
-                        nodes.Enqueue(new Point(x, y - 1));
-                        spanAbove = true;
+                        nodes.Enqueue(new Point(x, y - 1)); // Добавление точки сверху
+                        spanAbove = true; // Отметка, что продолжается заливка сверху
                     }
+                    // Прекращение заливки сверху, если следующий пиксель другого цвета
                     else if (spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) != targetColor)
                     {
-                        spanAbove = false;
+                        spanAbove = false; // Прекращение заливки сверху
                     }
 
+                    // Проверка и добавление точек для заливки снизу текущей линии
                     if (!spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) == targetColor)
                     {
-                        nodes.Enqueue(new Point(x, y + 1));
-                        spanBelow = true;
+                        nodes.Enqueue(new Point(x, y + 1)); // Добавление точки снизу
+                        spanBelow = true; // Отметка, что продолжается заливка снизу
                     }
+                    // Прекращение заливки снизу, если следующий пиксель другого цвета
                     else if (spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) != targetColor)
                     {
-                        spanBelow = false;
+                        spanBelow = false; // Прекращение заливки снизу
                     }
 
-                    x++;
+                    x++; // Переход к следующему пикселю вправо
                 }
 
-                pictureBoxForFigure.Refresh(); // Обновление изображения для отображения процесса заливки
-                Task.Delay(10).Wait(); // Задержка для визуализации процесса
+                // Обновление изображения для отображения процесса заливки
+                pictureBoxForFigure.Refresh();
+                // Задержка для визуализации процесса заливки
+                Task.Delay(10).Wait();
             }
         }
+
     }
 }
