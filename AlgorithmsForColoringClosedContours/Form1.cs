@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace AlgorithmsForColoringClosedContours
 {
@@ -146,8 +147,8 @@ namespace AlgorithmsForColoringClosedContours
 
         private void pictureBoxForFigure_MouseClick(object sender, MouseEventArgs e)
         {
-            selectedX = e.X;
-            selectedY = e.Y;
+            //selectedX = e.X;
+            //selectedY = e.Y;
         }
 
         private bool IsPointInPolygon(int x, int y, List<PointF> polygon)
@@ -246,5 +247,27 @@ namespace AlgorithmsForColoringClosedContours
             }
         }
 
+        private void Form1_Load(object sender, System.EventArgs e)
+        {
+            
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                selectedX = 300;
+                selectedY = 300;
+            }
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+            {
+                selectedX = 410;
+                selectedY = 300;
+            }
+        }
     }
 }
