@@ -31,13 +31,13 @@
             this.pictureBoxForFigure = new System.Windows.Forms.PictureBox();
             this.buttonCreateFigure = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.buttonLineByLineFilling = new System.Windows.Forms.Button();
             this.buttonSeedFilling = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonColorPicker = new System.Windows.Forms.Button();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForFigure)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -47,10 +47,10 @@
             this.pictureBoxForFigure.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxForFigure.Location = new System.Drawing.Point(297, 22);
+            this.pictureBoxForFigure.Location = new System.Drawing.Point(321, 22);
             this.pictureBoxForFigure.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBoxForFigure.Name = "pictureBoxForFigure";
-            this.pictureBoxForFigure.Size = new System.Drawing.Size(984, 742);
+            this.pictureBoxForFigure.Size = new System.Drawing.Size(960, 742);
             this.pictureBoxForFigure.TabIndex = 2;
             this.pictureBoxForFigure.TabStop = false;
             this.pictureBoxForFigure.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxForFigure_MouseClick);
@@ -81,9 +81,33 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(279, 753);
+            this.groupBox1.Size = new System.Drawing.Size(302, 753);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Font = new System.Drawing.Font("Times New Roman", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton2.Location = new System.Drawing.Point(8, 333);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(195, 24);
+            this.radioButton2.TabIndex = 9;
+            this.radioButton2.Text = "Правая часть фигуры";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Font = new System.Drawing.Font("Times New Roman", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton1.Location = new System.Drawing.Point(8, 307);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(185, 24);
+            this.radioButton1.TabIndex = 8;
+            this.radioButton1.Text = "Левая часть фигуры";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // buttonLineByLineFilling
             // 
@@ -112,14 +136,15 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label2.Location = new System.Drawing.Point(8, 161);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(249, 132);
+            this.label2.Size = new System.Drawing.Size(269, 132);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Для начала заливики\r\nнеобходимо выбрать\r\nчасть фигуры\r\nкоторая будет\r\nзакрашивать" +
-    "ся";
+            this.label2.Text = "Для заливки затравкой\r\nнеобходимо выбрать\r\nчасть фигуры\r\nкоторая будет\r\nзакрашива" +
+    "ться";
             // 
             // label1
             // 
@@ -142,32 +167,6 @@
             this.buttonColorPicker.Text = "Выбрать цвет";
             this.buttonColorPicker.UseVisualStyleBackColor = true;
             this.buttonColorPicker.Click += new System.EventHandler(this.buttonColorPicker_Click);
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Times New Roman", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton1.Location = new System.Drawing.Point(8, 307);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(185, 24);
-            this.radioButton1.TabIndex = 8;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Левая часть фигуры";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("Times New Roman", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton2.Location = new System.Drawing.Point(8, 333);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(195, 24);
-            this.radioButton2.TabIndex = 9;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Правая часть фигуры";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // Form1
             // 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
@@ -122,7 +123,7 @@ namespace AlgorithmsForColoringClosedContours
                     filledPixels++; 
 
                     // Задержка для визуализации процесса
-                    if (filledPixels % 20 == 0)
+                    if (filledPixels % 40 == 0)
                     {
                         pictureBoxForFigure.Refresh(); 
                         await Task.Delay(5); 
@@ -174,78 +175,87 @@ namespace AlgorithmsForColoringClosedContours
         }
 
 
-        private void buttonLineByLineFilling_Click(object sender, EventArgs e)
+        private async void buttonLineByLineFilling_Click(object sender, EventArgs e)
         {
-            if (selectedX == -1 || selectedY == -1 || !IsPointInPolygon(selectedX, selectedY, _currentPoints))
+            // Устанавливается цвет границы с использованием утилиты ControlPaint для осветления черного цвета
+            Color borderColor = ControlPaint.Light(Color.Black, 0.1f);
+
+            // Запускается асинхронная задача, чтобы процесс заливки не блокировал UI
+            await Task.Run(() =>
             {
-                MessageBox.Show("Выберите точку внутри фигуры для начала заливки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return; 
-            }
+                // Определяется минимальная и максимальная координата Y среди всех точек фигуры
+                float minY = _currentPoints.Min(p => p.Y);
+                float maxY = _currentPoints.Max(p => p.Y);
 
-            // Получение цвета пикселя в начальной точке для определения цвета, который будет заменяться
-            Color targetColor = _bitmap.GetPixel(selectedX, selectedY);
-            // Создание очереди для хранения точек, которые нужно закрасить
-            Queue<Point> nodes = new Queue<Point>();
-            // Добавление начальной точки в очередь
-            nodes.Enqueue(new Point(selectedX, selectedY));
-
-            // Цикл выполняется, пока в очереди есть точки для заливки
-            while (nodes.Count > 0)
-            {
-                // Извлечение точки из очереди
-                Point node = nodes.Dequeue();
-                int x = node.X;
-                int y = node.Y;
-
-                // Поиск крайней левой точки горизонтальной линии
-                while (x > 0 && _bitmap.GetPixel(x - 1, y) == targetColor)
+                // Цикл перебирает каждую строку между минимальной и максимальной координатами Y
+                for (int y = (int)minY; y < (int)maxY; y++)
                 {
-                    x--; // Сдвиг влево
+                    // Список для хранения X координат пересечений с границей фигуры
+                    List<float> nodeX = new List<float>();
+                    // Цикл перебирает все отрезки, составляющие границу фигуры
+                    for (int i = 0; i < _currentPoints.Count; i++)
+                    {
+                        // Получение текущей и следующей точки отрезка
+                        PointF p1 = _currentPoints[i];
+                        PointF p2 = _currentPoints[(i + 1) % _currentPoints.Count];
+
+                        // Проверка, пересекает ли горизонтальная линия на уровне Y отрезок между p1 и p2
+                        if ((p1.Y < y && p2.Y >= y) || (p2.Y < y && p1.Y >= y))
+                        {
+                            // Расчет X координаты пересечения и добавление ее в список
+                            nodeX.Add(p1.X + (y - p1.Y) / (p2.Y - p1.Y) * (p2.X - p1.X));
+                        }
+                    }
+
+                    nodeX.Sort();
+
+                    // Цикл закрашивает пиксели между парами пересечений
+                    for (int i = 0; i < nodeX.Count; i += 2)
+                    {
+                        // Если первое пересечение за пределами изображения, прерывается текущая итерация
+                        if (nodeX[i] >= _bitmap.Width) break;
+                        // Если второе пересечение вне изображения, продолжается цикл
+                        if (nodeX[i + 1] > 0)
+                        {
+                            // Закрашивание пикселей от первого до второго пересечения
+                            for (int x = (int)nodeX[i] + 1; x < nodeX[i + 1]; x++)
+                            {
+                                // Проверка, что текущий X находится в пределах изображения
+                                if (x >= 0 && x < _bitmap.Width)
+                                {
+                                    // Получение цвета текущего пикселя
+                                    Color currentPixelColor = _bitmap.GetPixel(x, y);
+                                    // Если цвет пикселя не близок к цвету границы, он закрашивается
+                                    if (!ColorsAreClose(currentPixelColor, borderColor))
+                                    {
+                                        _bitmap.SetPixel(x, y, _fillColor);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Обновление изображения на форме в главном потоке после обработки каждой строки
+                    this.Invoke(new Action(() =>
+                    {
+                        pictureBoxForFigure.Refresh();
+                    }));
+
+                    // Вставка задержки для видимости заливки
+                    Task.Delay(5).Wait();
                 }
-
-                // Инициализация переменных для отслеживания продолжения заливки сверху и снизу текущей линии
-                bool spanAbove = false;
-                bool spanBelow = false;
-
-                // Проход вправо от найденной крайней левой точки, закрашивая пиксели и проверяя верхнюю и нижнюю границы
-                while (x < _bitmap.Width && _bitmap.GetPixel(x, y) == targetColor)
-                {
-                    // Закраска текущего пикселя
-                    _bitmap.SetPixel(x, y, _fillColor);
-
-                    // Проверка и добавление точек для заливки сверху текущей линии
-                    if (!spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) == targetColor)
-                    {
-                        nodes.Enqueue(new Point(x, y - 1)); // Добавление точки сверху
-                        spanAbove = true; // Отметка, что продолжается заливка сверху
-                    }
-                    // Прекращение заливки сверху, если следующий пиксель другого цвета
-                    else if (spanAbove && y > 0 && _bitmap.GetPixel(x, y - 1) != targetColor)
-                    {
-                        spanAbove = false; // Прекращение заливки сверху
-                    }
-
-                    // Проверка и добавление точек для заливки снизу текущей линии
-                    if (!spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) == targetColor)
-                    {
-                        nodes.Enqueue(new Point(x, y + 1)); // Добавление точки снизу
-                        spanBelow = true; // Отметка, что продолжается заливка снизу
-                    }
-                    // Прекращение заливки снизу, если следующий пиксель другого цвета
-                    else if (spanBelow && y < _bitmap.Height - 1 && _bitmap.GetPixel(x, y + 1) != targetColor)
-                    {
-                        spanBelow = false; // Прекращение заливки снизу
-                    }
-
-                    x++; // Переход к следующему пикселю вправо
-                }
-
-                // Обновление изображения для отображения процесса заливки
-                pictureBoxForFigure.Refresh();
-                // Задержка для визуализации процесса заливки
-                Task.Delay(10).Wait();
-            }
+            });
         }
+
+
+        // Метод для определения, насколько близки цвета
+        private bool ColorsAreClose(Color a, Color b, int threshold = 10)
+        {
+            return Math.Abs(a.R - b.R) < threshold &&
+                   Math.Abs(a.G - b.G) < threshold &&
+                   Math.Abs(a.B - b.B) < threshold;
+        }
+
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
