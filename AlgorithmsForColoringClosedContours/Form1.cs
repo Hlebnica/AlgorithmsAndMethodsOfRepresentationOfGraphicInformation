@@ -21,7 +21,7 @@ namespace AlgorithmsForColoringClosedContours
         };
         private List<PointF> _currentPoints = new List<PointF>();
         private Color _fillColor = ColorTranslator.FromHtml("#0008FF");
-
+        private bool _figureCreated = false;
         private int selectedX = -1;
         private int selectedY = -1;
 
@@ -35,11 +35,14 @@ namespace AlgorithmsForColoringClosedContours
             ClearPictureBox();
         }
 
+        
+
         private void buttonCreateFigure_Click(object sender, EventArgs e)
         {
             InitializeFigure();
             ClearPictureBox();
             DrawFigure();
+            _figureCreated = true;
         }
 
         // Отрисовка фигуры
@@ -123,24 +126,25 @@ namespace AlgorithmsForColoringClosedContours
                     filledPixels++; 
 
                     // Задержка для визуализации процесса
-                    if (filledPixels % 40 == 0)
+                    if (filledPixels % 60 == 0)
                     {
                         pictureBoxForFigure.Refresh(); 
                         await Task.Delay(5); 
                     }
 
                     // Добавление соседних пикселей в стек для дальнейшей заливки
+                    /*
                     pixelsToFill.Push(new Point(x + 1, y)); // Добавление пикселя справа
                     pixelsToFill.Push(new Point(x - 1, y)); // Добавление пикселя слева
                     pixelsToFill.Push(new Point(x, y + 1)); // Добавление пикселя сверху
                     pixelsToFill.Push(new Point(x, y - 1)); // Добавление пикселя снизу 
-
-                    /*
+                    */
+                    
                     pixelsToFill.Push(new Point(x, y - 1)); // Добавление пикселя сверху
                     pixelsToFill.Push(new Point(x, y + 1)); // Добавление пикселя снизу
                     pixelsToFill.Push(new Point(x - 1, y)); // Добавление пикселя слева
                     pixelsToFill.Push(new Point(x + 1, y)); // Добавление пикселя справа
-                    */
+                    
                 }
             }
             pictureBoxForFigure.Refresh();
@@ -177,6 +181,12 @@ namespace AlgorithmsForColoringClosedContours
 
         private async void buttonLineByLineFilling_Click(object sender, EventArgs e)
         {
+            if (!_figureCreated) 
+            {
+                MessageBox.Show("Нужно создать фигуру для заливки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             // Устанавливается цвет границы с использованием утилиты ControlPaint для осветления черного цвета
             Color borderColor = ControlPaint.Light(Color.Black, 0.1f);
 
