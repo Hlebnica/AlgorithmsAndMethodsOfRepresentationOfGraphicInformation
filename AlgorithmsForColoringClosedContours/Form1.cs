@@ -48,7 +48,7 @@ namespace AlgorithmsForColoringClosedContours
 
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
-                Pen pen = new Pen(Color.Black);
+                Pen pen = new Pen(ControlPaint.Light(Color.Black, 0.1f));
 
                 // Соединение точек
                 for (int i = 0; i < _currentPoints.Count; i++)
