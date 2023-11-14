@@ -54,22 +54,31 @@ namespace IndividualTaskGUI
             // Отрисовка часового круга
             g.FillEllipse(Brushes.White, centerX - clockRadius, centerY - clockRadius, 2 * clockRadius, 2 * clockRadius);
 
+            // Рисуем засечки для часов и минут
+            for (int mark = 0; mark < 60; mark++)
+            {
+                double angle = mark * 6; // Каждая засечка находится под углом 6 градусов
+                double angleRadians = angle * Math.PI / 180;
+                int markLength = (mark % 5 == 0) ? 10 : 5; // Длина для каждой 5-й метки больше
+                int startX = (int)(centerX + (clockRadius - markLength) * Math.Cos(angleRadians));
+                int startY = (int)(centerY + (clockRadius - markLength) * Math.Sin(angleRadians));
+                int endX = (int)(centerX + clockRadius * Math.Cos(angleRadians));
+                int endY = (int)(centerY + clockRadius * Math.Sin(angleRadians));
+
+                // Рисуем засечку
+                g.DrawLine(Pens.Black, startX, startY, endX, endY);
+            }
+
             // Рисуем цифры от 1 до 12 вокруг эллипса
             for (int i = 1; i <= 12; i++)
             {
                 double angle = (i - 3) * 30; // Отступаем на 3 часа и умножаем на 30 градусов
                 double angleRadians = angle * Math.PI / 180;
-                int digitX = (int)(centerX + clockRadius * Math.Cos(angleRadians));
-                int digitY = (int)(centerY + clockRadius * Math.Sin(angleRadians));
+                int digitX = (int)(centerX + clockRadius * 0.9 * Math.Cos(angleRadians)); // Уменьшаем радиус для цифр
+                int digitY = (int)(centerY + clockRadius * 0.9 * Math.Sin(angleRadians));
 
                 // Рисуем цифру
                 g.DrawString(i.ToString(), Font, Brushes.Black, digitX, digitY, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
-
-                // Рисуем засечку
-                int notchLength = 10;
-                int notchX = (int)(centerX + (clockRadius - notchLength) * Math.Cos(angleRadians));
-                int notchY = (int)(centerY + (clockRadius - notchLength) * Math.Sin(angleRadians));
-                g.DrawLine(Pens.Black, notchX, notchY, digitX, digitY);
             }
 
             // Получаем текущее время
@@ -84,6 +93,8 @@ namespace IndividualTaskGUI
             // Отрисовка часовой стрелки
             DrawClockHand(g, Pens.Black, centerX, centerY, hourHandLength, (currentTime.Hour % 12 * 30) + (currentTime.Minute * 0.5));
         }
+
+
 
         private void DrawClockHand(Graphics g, Pen pen, int x, int y, int length, double angleDegrees)
         {
