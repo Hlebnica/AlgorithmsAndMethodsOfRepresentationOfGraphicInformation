@@ -31,6 +31,9 @@ namespace IndividualTaskGUI
 
             // Подписываемся на событие Paint pictureBox
             pictureBoxClock.Paint += pictureBoxClock_Paint;
+
+            // Задаем значение по умолчанию для textBoxSecondsCoefficient
+            textBoxSecondsCoefficient.Text = "1";
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -95,7 +98,6 @@ namespace IndividualTaskGUI
         }
 
 
-
         private void DrawClockHand(Graphics g, Pen pen, int x, int y, int length, double angleDegrees)
         {
             // Переводим угол в радианы
@@ -110,6 +112,11 @@ namespace IndividualTaskGUI
         }
 
         private void pictureBoxClock_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonChangeSecondsCoefficient_Click(object sender, EventArgs e)
         {
 
         }
