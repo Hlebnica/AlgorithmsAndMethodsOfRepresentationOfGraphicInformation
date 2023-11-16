@@ -48,7 +48,6 @@ namespace IndividualTaskGUI
             double elapsedSeconds = (currentTime - previousTime).TotalSeconds;
 
             // Увеличиваем обороты стрелок в зависимости от коэффициента секунд и прошедшего времени
-            //double secondsCoefficient = Convert.ToDouble(textBoxSecondsCoefficient.Text);
             secondsRotation += (6.0 * secondsCoefficient * elapsedSeconds);
             minutesRotation += (6.0 / 60.0 * elapsedSeconds * secondsCoefficient);
             hoursRotation += (6.0 / 720.0 * elapsedSeconds * secondsCoefficient);
@@ -109,11 +108,6 @@ namespace IndividualTaskGUI
 
             // Рисуем линию стрелки
             g.DrawLine(pen, x, y, endX, endY);
-        }
-
-        private void pictureBoxClock_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void buttonChangeSecondsCoefficient_Click(object sender, EventArgs e)
