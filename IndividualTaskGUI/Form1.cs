@@ -18,83 +18,83 @@ namespace IndividualTaskGUI
         private const int secondHandLength = 140;
 
         private Timer timer;
+        private double secondsRotation = 0.0;
+        private double minutesRotation = 0.0;
+        private double hoursRotation = 0.0;
+        private DateTime previousTime;
+        private double secondsCoefficient = 1.0;
 
         public Form1()
         {
             InitializeComponent();
 
-            // Создаем таймер для обновления времени каждую секунду
             timer = new Timer();
-            timer.Interval = 1000;
+            timer.Interval = 16; // Используем интервал в 16 миллисекунд для более плавного движения
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            // Подписываемся на событие Paint pictureBox
             pictureBoxClock.Paint += pictureBoxClock_Paint;
-
-            // Задаем значение по умолчанию для textBoxSecondsCoefficient
             textBoxSecondsCoefficient.Text = "1";
+
+            previousTime = DateTime.Now;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            // Получаем текущее время
+            DateTime currentTime = DateTime.Now;
+
+            // Рассчитываем прошедшее время с предыдущего тика
+            double elapsedSeconds = (currentTime - previousTime).TotalSeconds;
+
+            // Увеличиваем обороты стрелок в зависимости от коэффициента секунд и прошедшего времени
+            //double secondsCoefficient = Convert.ToDouble(textBoxSecondsCoefficient.Text);
+            secondsRotation += (6.0 * secondsCoefficient * elapsedSeconds);
+            minutesRotation += (6.0 / 60.0 * elapsedSeconds * secondsCoefficient);
+            hoursRotation += (6.0 / 720.0 * elapsedSeconds * secondsCoefficient);
+
             // Перерисовываем часы при каждом тике таймера
             pictureBoxClock.Invalidate();
+
+            // Обновляем предыдущее время
+            previousTime = currentTime;
         }
 
         private void pictureBoxClock_Paint(object sender, PaintEventArgs e)
         {
-            // Получаем объект Graphics для рисования на PictureBox
             Graphics g = e.Graphics;
-
-            // Очищаем изображение
             g.Clear(pictureBoxClock.BackColor);
 
-            // Определение центра часов
             int centerX = pictureBoxClock.Width / 2;
             int centerY = pictureBoxClock.Height / 2;
 
-            // Отрисовка часового круга
             g.FillEllipse(Brushes.White, centerX - clockRadius, centerY - clockRadius, 2 * clockRadius, 2 * clockRadius);
 
-            // Рисуем засечки для часов и минут
             for (int mark = 0; mark < 60; mark++)
             {
-                double angle = mark * 6; // Каждая засечка находится под углом 6 градусов
+                double angle = mark * 6;
                 double angleRadians = angle * Math.PI / 180;
-                int markLength = (mark % 5 == 0) ? 10 : 5; // Длина для каждой 5-й метки больше
+                int markLength = (mark % 5 == 0) ? 10 : 5;
                 int startX = (int)(centerX + (clockRadius - markLength) * Math.Cos(angleRadians));
                 int startY = (int)(centerY + (clockRadius - markLength) * Math.Sin(angleRadians));
                 int endX = (int)(centerX + clockRadius * Math.Cos(angleRadians));
                 int endY = (int)(centerY + clockRadius * Math.Sin(angleRadians));
 
-                // Рисуем засечку
                 g.DrawLine(Pens.Black, startX, startY, endX, endY);
             }
 
-            // Рисуем цифры от 1 до 12 вокруг эллипса
             for (int i = 1; i <= 12; i++)
             {
-                double angle = (i - 3) * 30; // Отступаем на 3 часа и умножаем на 30 градусов
+                double angle = (i - 3) * 30;
                 double angleRadians = angle * Math.PI / 180;
-                int digitX = (int)(centerX + clockRadius * 0.9 * Math.Cos(angleRadians)); // Уменьшаем радиус для цифр
+                int digitX = (int)(centerX + clockRadius * 0.9 * Math.Cos(angleRadians));
                 int digitY = (int)(centerY + clockRadius * 0.9 * Math.Sin(angleRadians));
-
-                // Рисуем цифру
                 g.DrawString(i.ToString(), Font, Brushes.Black, digitX, digitY, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
 
-            // Получаем текущее время
-            DateTime currentTime = DateTime.Now;
-
-            // Отрисовка секундной стрелки
-            DrawClockHand(g, Pens.Red, centerX, centerY, secondHandLength, currentTime.Second * 6);
-
-            // Отрисовка минутной стрелки
-            DrawClockHand(g, Pens.Blue, centerX, centerY, minuteHandLength, (currentTime.Minute * 6) + (currentTime.Second * 0.1));
-
-            // Отрисовка часовой стрелки
-            DrawClockHand(g, Pens.Black, centerX, centerY, hourHandLength, (currentTime.Hour % 12 * 30) + (currentTime.Minute * 0.5));
+            DrawClockHand(g, Pens.Red, centerX, centerY, secondHandLength, secondsRotation);
+            DrawClockHand(g, Pens.Blue, centerX, centerY, minuteHandLength, minutesRotation);
+            DrawClockHand(g, Pens.Black, centerX, centerY, hourHandLength, hoursRotation);
         }
 
 
@@ -118,7 +118,28 @@ namespace IndividualTaskGUI
 
         private void buttonChangeSecondsCoefficient_Click(object sender, EventArgs e)
         {
+            string inputText = textBoxSecondsCoefficient.Text;
 
+            // Проверка на пустое поле
+            if (string.IsNullOrWhiteSpace(inputText))
+            {
+                MessageBox.Show("Пожалуйста, введите коэффициент.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Проверка на корректность числа
+            if (!double.TryParse(inputText, out secondsCoefficient))
+            {
+                MessageBox.Show("Некорректное значение коэффициента.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Проверка на отрицательное значение
+            if (secondsCoefficient <= 0)
+            {
+                MessageBox.Show("Коэффициент должен быть положительным числом.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }
