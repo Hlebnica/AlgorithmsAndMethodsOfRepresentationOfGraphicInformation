@@ -188,7 +188,8 @@ namespace IndividualTaskGUI
                 "Раздел 'Смена цвета стрелок'\n" +
                 "   - Позволяет изменить цвет стрелки по названию соответсвующей кнопки\n\n" +
                 "Раздел 'Смена цвета внутренних элементов'\n" +
-                "   - Позволяет изменить цвет элементов аналогвых часов соответствующих названий\n" +
+                "   - Позволяет изменить цвет элементов аналогвых часов соответствующих названий\n\n" +
+                "Кнопка 'Сбросить все настройки' - позволяет установить все изменяемые параметры на изначальные"
                 , "Справка", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -247,5 +248,29 @@ namespace IndividualTaskGUI
                 pictureBoxClock.Invalidate();
             }
         }
+
+        private void buttonResetSettings_Click(object sender, EventArgs e)
+        {
+            textBoxSecondsCoefficient.Text = "1";
+            secondsCoefficient = 1.0;
+            
+            secondsHandColor = Color.Red;
+            minuteHandColor = Color.Blue;
+            hoursHandColor = Color.Black;
+
+            marksColor = Color.Black;
+            digitBrush.Color = Color.Black;
+
+            backgroundBrush.Color = Color.White;
+
+            secondsRotation = 0.0;
+            minutesRotation = 0.0;
+            hoursRotation = 0.0;
+
+            labelDigitalClock.Text = "00:00:00";
+
+            pictureBoxClock.Invalidate();
+        }
+
     }
 }
