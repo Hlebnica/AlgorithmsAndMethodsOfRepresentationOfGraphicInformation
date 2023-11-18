@@ -9,7 +9,7 @@ namespace IndividualTaskGUI
         private const int clockRadius = 220;
         private const int hourHandLength = 100;
         private const int minuteHandLength = 140;
-        private const int secondHandLength = 160;
+        private const int secondHandLength = 170;
 
         private Timer timer;
         private DateTime previousTime;
@@ -54,10 +54,10 @@ namespace IndividualTaskGUI
             minutesRotation += (6.0 / 60.0 * elapsedSeconds * secondsCoefficient);
             hoursRotation += (6.0 / 720.0 * elapsedSeconds * secondsCoefficient);
 
-            // Если стрелка идет назад, корректируем значения
+            // Если стрелка идет назад, корректировка значений
             if (hoursRotation < 0)
             {
-                hoursRotation = 360 + hoursRotation % 360;
+                hoursRotation = 720 + hoursRotation % 360;
             }
             if (minutesRotation < 0)
             {
@@ -68,20 +68,22 @@ namespace IndividualTaskGUI
                 secondsRotation = 360 + secondsRotation % 360;
             }
 
-            // Форматируем текущее время, отображаемое на часах
-            int hours = (int)((hoursRotation / 360.0) * 24.0) % 24;
-            int minutes = (int)((minutesRotation / 360.0) * 60.0) % 60;
-            int seconds = (int)((secondsRotation / 360.0) * 60.0) % 60;
+            int totalSeconds = (int)(secondsRotation / 6.0);
+            int totalMinutes = (int)(minutesRotation / 6.0);
+
+            int totalHours = (int)(hoursRotation / 30.0);
+            totalHours = (totalHours + 24) % 24; 
+
+            int hours = totalHours;
+            int minutes = totalMinutes % 60;
+            int seconds = totalSeconds % 60;
 
             string digitalClockText = $"{hours:D2}:{minutes:D2}:{seconds:D2}";
-
-            // Устанавливаем текст для labelDigitalClock
             labelDigitalClock.Text = digitalClockText;
 
-            // Перерисовываем часы при каждом тике таймера
             pictureBoxClock.Invalidate();
 
-            // Обновляем предыдущее время
+            // Обновить предыдущее время
             previousTime = currentTime;
         }
 
