@@ -31,7 +31,7 @@ namespace IndividualTaskGUI
             InitializeComponent();
 
             timer = new Timer();
-            timer.Interval = 16; // Используем интервал в 16 миллисекунд для более плавного движения
+            timer.Interval = 16;
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -68,6 +68,7 @@ namespace IndividualTaskGUI
                 secondsRotation = 360 + secondsRotation % 360;
             }
 
+            // Расчет времени 
             int totalSeconds = (int)(secondsRotation / 6.0);
             int totalMinutes = (int)(minutesRotation / 6.0);
 
@@ -96,8 +97,10 @@ namespace IndividualTaskGUI
             int centerX = pictureBoxClock.Width / 2;
             int centerY = pictureBoxClock.Height / 2;
 
+            // Фон часов
             g.FillEllipse(backgroundBrush, centerX - clockRadius, centerY - clockRadius, 2 * clockRadius, 2 * clockRadius);
 
+            // Засечки
             for (int mark = 0; mark < 60; mark++)
             {
                 double angle = mark * 6;
@@ -111,6 +114,7 @@ namespace IndividualTaskGUI
                 g.DrawLine(new Pen(marksColor), startX, startY, endX, endY);
             }
 
+            // Числа часов
             for (int i = 1; i <= 12; i++)
             {
                 double angle = (i - 3) * 30;
@@ -120,6 +124,7 @@ namespace IndividualTaskGUI
                 g.DrawString(i.ToString(), Font, digitBrush, digitX, digitY, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
 
+            // Стрелки
             DrawClockHand(g, new Pen(secondsHandColor), centerX, centerY, secondHandLength, secondsRotation);
             DrawClockHand(g, new Pen(minuteHandColor), centerX, centerY, minuteHandLength, minutesRotation);
             DrawClockHand(g, new Pen(hoursHandColor), centerX, centerY, hourHandLength, hoursRotation);
@@ -128,14 +133,11 @@ namespace IndividualTaskGUI
 
         private void DrawClockHand(Graphics g, Pen pen, int x, int y, int length, double angleDegrees)
         {
-            // Переводим угол в радианы
             double angleRadians = angleDegrees * Math.PI / 180;
 
-            // Вычисляем конечные координаты стрелки
             int endX = (int)(x + length * Math.Sin(angleRadians));
             int endY = (int)(y - length * Math.Cos(angleRadians));
 
-            // Рисуем линию стрелки
             g.DrawLine(pen, x, y, endX, endY);
         }
 
