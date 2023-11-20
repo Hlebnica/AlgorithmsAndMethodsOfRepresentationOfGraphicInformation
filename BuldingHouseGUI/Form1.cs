@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,154 +13,345 @@ namespace BuldingHouseGUI
 {
     public partial class Form1 : Form
     {
+        Bitmap bitmap;
+        List<DrawingObject> drawingObjects = new List<DrawingObject>();
+        Color houseColor = Color.Gray;
+        Color roofColor = Color.Black;
+        Color doorColor = Color.Brown;
+        Color windowColor = Color.Blue;
+
         public Form1()
         {
             InitializeComponent();
-            InitializeRoofTypes();
+            bitmap = new Bitmap(pictureBoxHouse.Width, pictureBoxHouse.Height);
+            pictureBoxHouse.Image = bitmap;
+            pictureBoxHouse.BackgroundImageLayout = ImageLayout.None;
 
-            // Добавление значений в comboBoxCountOfWindows
+            deleteHouse();
+
+            comboBoxRoofType.Items.Add("Треугольник");
+            comboBoxRoofType.Items.Add("Трапеция");
+            comboBoxRoofType.Items.Add("Полукруг");
+
             comboBoxCountOfWindows.Items.Add("1");
             comboBoxCountOfWindows.Items.Add("2");
             comboBoxCountOfWindows.Items.Add("3");
 
-            // Добавление значений в comboBoxPlaceForWindows
             comboBoxPlaceForWindows.Items.Add("Слева");
             comboBoxPlaceForWindows.Items.Add("По центру");
             comboBoxPlaceForWindows.Items.Add("Справа");
 
-            // Добавление значений в comboBoxPlaceForDoor
             comboBoxPlaceForDoor.Items.Add("Слева");
             comboBoxPlaceForDoor.Items.Add("По центру");
             comboBoxPlaceForDoor.Items.Add("Справа");
 
         }
 
-        private void InitializeRoofTypes()
-        {
-            // Заполнение comboBoxRoofType
-            comboBoxRoofType.Items.Add("Прямоугольная");
-            comboBoxRoofType.Items.Add("Треугольная");
-            comboBoxRoofType.Items.Add("Полукруглая");
-        }
-
         private void buttonBuildHouse_Click(object sender, EventArgs e)
         {
-            // Получение параметров дома
-            int houseHeight = Convert.ToInt32(textBoxHouseHeight.Text);
-            int houseWidth = Convert.ToInt32(textBoxHouseWeight.Text);
-            int roofHeight = Convert.ToInt32(textBoxRoofHeight.Text);
-            string roofType = comboBoxRoofType.SelectedItem.ToString();
+            deleteHouse();
+            pictureBoxHouse.Invalidate();
+            int houseWidth = 0;
+            int houseHeight = 0;
+            int roofHeight = 0;
 
-            // Получение параметров окон и двери
-            int windowCount = Convert.ToInt32(comboBoxCountOfWindows.SelectedItem);
-            string windowPlacement = comboBoxPlaceForWindows.SelectedItem.ToString();
-            string doorPlacement = comboBoxPlaceForDoor.SelectedItem.ToString();
-
-            // Создание объекта для рисования на pictureBox
-            Graphics g = pictureBoxHouse.CreateGraphics();
-            g.Clear(Color.White); // Очистка предыдущего рисунка
-
-            // Рисование основания дома
-            int baseX = (pictureBoxHouse.Width - houseWidth) / 2;
-            int baseY = pictureBoxHouse.Height - houseHeight - 10;
-            g.DrawRectangle(Pens.Black, baseX, baseY, houseWidth, houseHeight);
-
-            // Рисование крыши в зависимости от выбранного типа
-            switch (roofType)
+            try
             {
-                case "Прямоугольная":
-                    DrawRectangularRoof(g, baseX, baseY, houseWidth, houseHeight, roofHeight);
+                houseWidth = int.Parse(textBoxHouseWeight.Text);
+                houseHeight = int.Parse(textBoxHouseHeight.Text);
+                roofHeight = int.Parse(textBoxRoofHeight.Text);
+
+                if (houseWidth < 100 || houseWidth > 300)
+                {
+                    MessageBox.Show("Некорректная ширина дома");
+                    return;
+                }
+                if (houseHeight < 100 || houseHeight > 200)
+                {
+                    MessageBox.Show("Некорректная высота дома");
+                    return;
+                }
+                if (roofHeight < 80 || roofHeight > 120)
+                {
+                    MessageBox.Show("Некорректная высота крыши");
+                    return;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Заполните все поля");
+                return;
+            }
+
+            if (comboBoxRoofType.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите тип крыши");
+                return;
+            }
+            if (comboBoxCountOfWindows.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите количество окон");
+                return;
+            }
+            if (comboBoxPlaceForDoor.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите расположение двери");
+                return;
+            }
+            if (comboBoxCountOfWindows.SelectedIndex == 0 && comboBoxPlaceForWindows.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите расположение окон");
+                return;
+            }
+
+            //Корпус
+            drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                houseColor, pictureBoxHouse.Width / 2 - houseWidth / 2, pictureBoxHouse.Height - 50 - houseHeight, houseWidth, houseHeight));
+
+
+            //Крыша
+            switch (comboBoxRoofType.SelectedIndex)
+            {
+                case 0:
+                    // Треугольная крыша
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Polygon, roofColor,
+                        pictureBoxHouse.Width / 2 - houseWidth / 2 - 10, pictureBoxHouse.Height - 50 - houseHeight,
+                        new Point[] {
+                            new Point(0, 0),
+                            new Point(houseWidth + 20, 0),
+                            new Point(houseWidth / 2 + 10, -roofHeight) }));
                     break;
-                case "Треугольная":
-                    DrawTriangularRoof(g, baseX, baseY, houseWidth, houseHeight, roofHeight);
+                case 1:
+                    // Трапециевидная крыша
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Polygon, roofColor,
+                        pictureBoxHouse.Width / 2 - houseWidth / 2 - 10, pictureBoxHouse.Height - 50 - houseHeight,
+                        new Point[] {
+                            new Point(0, 0),
+                            new Point(houseWidth + 20, 0),
+                            new Point(houseWidth / 4 * 3 + 5, -roofHeight),
+                            new Point(houseWidth / 4 + 5, -roofHeight)
+                        }));
                     break;
-                case "Полукруглая":
-                    DrawSemicircularRoof(g, baseX, baseY, houseWidth, houseHeight, roofHeight);
+                case 2:
+                    // Полукруглая крыша
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.HalfCircle, roofColor,
+                        pictureBoxHouse.Width / 2 - houseWidth / 2 - 10, pictureBoxHouse.Height - 50 - houseHeight - roofHeight/2,
+                        houseWidth + 20, roofHeight));
                     break;
                 default:
+                    MessageBox.Show("Неверный тип крыши");
                     break;
             }
 
-            // Рисование окон
-            DrawWindows(g, baseX, baseY, houseWidth, houseHeight, windowCount, windowPlacement);
-
-            // Рисование двери
-            DrawDoor(g, baseX, baseY, houseWidth, houseHeight, doorPlacement);
-        }
-
-        private void DrawWindows(Graphics g, int baseX, int baseY, int houseWidth, int houseHeight, int windowCount, string windowPlacement)
-        {
-            int windowSize = 20;
-            int windowHeight = 30; // Высота окна
-
-            int windowX = 0;
-            switch (windowPlacement)
+            //Дверь
+            switch (comboBoxPlaceForDoor.SelectedIndex)
             {
-                case "Слева":
-                    windowX = baseX + 10;
+                case 0:
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                        doorColor, pictureBoxHouse.Width / 2 - (int)(houseWidth / 2.5),
+                        pictureBoxHouse.Height - 50 - (int)(houseHeight / 2.5),
+                        houseWidth / 6, (int)(houseHeight / 2.5)));
                     break;
-                case "По центру":
-                    windowX = baseX + (houseWidth - windowCount * windowSize) / 2;
+                case 1:
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                        doorColor, pictureBoxHouse.Width / 2 - houseWidth / 6 / 2,
+                        pictureBoxHouse.Height - 50 - (int)(houseHeight / 2.5),
+                        houseWidth / 6, (int)(houseHeight / 2.5)));
                     break;
-                case "Справа":
-                    windowX = baseX + houseWidth - windowCount * windowSize - 10;
+                case 2:
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                        doorColor, pictureBoxHouse.Width / 2 + (int)(houseWidth / 2.5) - houseWidth / 6,
+                        pictureBoxHouse.Height - 50 - (int)(houseHeight / 2.5),
+                        houseWidth / 6, (int)(houseHeight / 2.5)));
+                    break;
+                default:
+                    MessageBox.Show("Неверное расположение двери");
                     break;
             }
 
-            int windowY = baseY - windowHeight - 10;
-
-            for (int i = 0; i < windowCount; i++)
+            //Окна
+            if (comboBoxCountOfWindows.SelectedIndex == 0)
             {
-                g.DrawRectangle(Pens.Blue, windowX, windowY, windowSize, windowHeight);
-                windowX += windowSize + 10; // Промежуток между окнами
+                switch (comboBoxPlaceForWindows.SelectedIndex)
+                {
+                    case 0:
+                        drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                            windowColor, pictureBoxHouse.Width / 2 - (int)(houseWidth / 2.5),
+                            pictureBoxHouse.Height - 50 - (int)(houseHeight / 4) - (int)(houseHeight / 1.75),
+                            houseWidth / 6, (int)(houseHeight / 4)));
+                        break;
+                    case 1:
+                        drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                            windowColor, pictureBoxHouse.Width / 2 - houseWidth / 6 / 2,
+                            pictureBoxHouse.Height - 50 - (int)(houseHeight / 4) - (int)(houseHeight / 1.75),
+                            houseWidth / 6, (int)(houseHeight / 4)));
+                        break;
+                    case 2:
+                        drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                             windowColor, pictureBoxHouse.Width / 2 + (int)(houseWidth / 2.5) - houseWidth / 6,
+                             pictureBoxHouse.Height - 50 - (int)(houseHeight / 4) - (int)(houseHeight / 1.75),
+                             houseWidth / 6, (int)(houseHeight / 4)));
+                        break;
+                    default:
+                        MessageBox.Show("Неверное расположение двери");
+                        break;
+                }
             }
-        }
-
-        private void DrawDoor(Graphics g, int baseX, int baseY, int houseWidth, int houseHeight, string doorPlacement)
-        {
-            int doorWidth = 30;
-            int doorHeight = 60;
-
-            int doorX = 0;
-            switch (doorPlacement)
+            else
             {
-                case "Слева":
-                    doorX = baseX + 10;
-                    break;
-                case "По центру":
-                    doorX = baseX + (houseWidth - doorWidth) / 2;
-                    break;
-                case "Справа":
-                    doorX = baseX + houseWidth - doorWidth - 10;
-                    break;
+                for (int i = 0; i < comboBoxCountOfWindows.SelectedIndex + 1; i++)
+                {
+                    drawingObjects.Add(new DrawingObject(DrawingObject.ObjectType.Rectangle,
+                            windowColor,
+                            pictureBoxHouse.Width / 2 - houseWidth / 2 +
+                            houseWidth / (comboBoxCountOfWindows.SelectedIndex + 2) / (comboBoxCountOfWindows.SelectedIndex + 1) +
+                            i * houseWidth / (comboBoxCountOfWindows.SelectedIndex + 1),
+                            pictureBoxHouse.Height - 50 - (int)(houseHeight / 4) - (int)(houseHeight / 1.75),
+                            houseWidth / 6, (int)(houseHeight / 4)));
+                }
             }
 
-            int doorY = baseY - doorHeight;
-
-            g.DrawRectangle(Pens.Red, doorX, doorY, doorWidth, doorHeight);
+            DrawObjects();
         }
 
-
-        private void DrawRectangularRoof(Graphics g, int baseX, int baseY, int houseWidth, int houseHeight, int roofHeight)
+        private void deleteHouse()
         {
-            g.DrawLine(Pens.Black, baseX, baseY, baseX + houseWidth, baseY);
-            g.DrawLine(Pens.Black, baseX, baseY, baseX, baseY - roofHeight);
-            g.DrawLine(Pens.Black, baseX + houseWidth, baseY, baseX + houseWidth, baseY - roofHeight);
-            g.DrawLine(Pens.Black, baseX, baseY - roofHeight, baseX + houseWidth, baseY - roofHeight);
+            drawingObjects.Clear();
+            bitmap = new Bitmap(pictureBoxHouse.Width, pictureBoxHouse.Height);
+            pictureBoxHouse.Image = bitmap;
+            pictureBoxHouse.BackgroundImageLayout = ImageLayout.None;
+
         }
 
-        private void DrawTriangularRoof(Graphics g, int baseX, int baseY, int houseWidth, int houseHeight, int roofHeight)
+        private void DrawObjects()
         {
-            g.DrawLine(Pens.Black, baseX, baseY, baseX + houseWidth / 2, baseY - roofHeight);
-            g.DrawLine(Pens.Black, baseX + houseWidth / 2, baseY - roofHeight, baseX + houseWidth, baseY);
+            bitmap = new Bitmap(pictureBoxHouse.Width, pictureBoxHouse.Height);
+            pictureBoxHouse.Image = bitmap;
+            pictureBoxHouse.BackgroundImageLayout = ImageLayout.None;
+
+
+            Graphics formGraphics = Graphics.FromImage(bitmap);
+            foreach (DrawingObject drawingObject in drawingObjects)
+            {
+                if (drawingObject != null)
+                {
+                    Brush myBrush = new SolidBrush(drawingObject.color);
+                    switch (drawingObject.type)
+                    {
+                        case DrawingObject.ObjectType.Rectangle:
+                            formGraphics.FillRectangle(myBrush, new Rectangle(drawingObject.x, drawingObject.y, drawingObject.width, drawingObject.height));
+                            break;
+                        case DrawingObject.ObjectType.Polygon:
+                            formGraphics.FillPolygon(myBrush, drawingObject.points.Select(point => new Point(drawingObject.x + point.X, drawingObject.y + point.Y)).ToArray());
+                            break;
+                        case DrawingObject.ObjectType.HalfCircle:
+                            GraphicsPath path = new GraphicsPath();
+                            path.AddArc(drawingObject.x, drawingObject.y, drawingObject.width, drawingObject.height, 180, 180);
+                            formGraphics.FillPath(myBrush, path);
+                            break;
+                        default:
+                            MessageBox.Show("Неизвестный тип объекта");
+                            break;
+                    }
+                    myBrush.Dispose();
+                }
+
+            }
+            formGraphics.Dispose();
         }
 
-
-        private void DrawSemicircularRoof(Graphics g, int baseX, int baseY, int houseWidth, int houseHeight, int roofHeight)
+        public class DrawingObject
         {
-            int radius = houseWidth / 2;
-            g.DrawArc(Pens.Black, baseX, baseY - roofHeight, houseWidth, roofHeight * 2, 0, -180);
+            public enum ObjectType : int { Polygon = 0, Rectangle = 1, HalfCircle = 2 }
+            public ObjectType type { get; set; }
+            public int x, y, height, width;
+            public Color color { get; set; }
+            public Point[] points { get; set; }
+
+
+            public DrawingObject(ObjectType type, Color color, int x, int y, Point[] pointArray)
+            {
+                this.type = type;
+                this.color = color;
+                this.x = x;
+                this.y = y;
+                this.points = pointArray;
+            }
+
+            public DrawingObject(ObjectType type, Color color, int x, int y, int width, int height)
+            {
+                this.type = type;
+                this.color = color;
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+            }
         }
+
+        private void buttonChangeHouseColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                houseColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonChangeRoofColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                roofColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonChangeDoorColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                doorColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonChangeWindowColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                windowColor = colorDialog.Color;
+            }
+        }
+
+        private void comboBoxCountOfWindows_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxCountOfWindows.SelectedIndex != 0)
+            {
+                comboBoxPlaceForWindows.SelectedIndex = -1;
+                comboBoxPlaceForWindows.Enabled = false;
+            }
+            else
+            {
+                comboBoxPlaceForWindows.Enabled = true;
+            }
+        }
+
+        private void buttonDestroyHouse_Click(object sender, EventArgs e)
+        {
+            deleteHouse();
+        }
+
+        private void buttonInfo_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "Тест\n" +
+                "   - Тест\n" +
+                "   - Тест\n\n" 
+                , "Справка", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
 
     }
 }
