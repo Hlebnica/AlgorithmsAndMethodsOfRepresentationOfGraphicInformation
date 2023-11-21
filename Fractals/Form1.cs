@@ -21,8 +21,8 @@ namespace Fractals
         {
             if (int.TryParse(textBoxIterations.Text, out int maxIterations))
             {
-                double zoom = 150;
-                double offsetX = pictureBox.Width / 2.0 + 100;
+                double zoom = 250;
+                double offsetX = pictureBox.Width / 2.0 + 135;
                 double offsetY = pictureBox.Height / 2.0;
 
                 Bitmap fractalBitmap = GenerateFractal(maxIterations, zoom, offsetX, offsetY);

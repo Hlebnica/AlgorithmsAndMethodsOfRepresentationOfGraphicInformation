@@ -37,7 +37,7 @@
             // 
             // btnGenerateFractal
             // 
-            this.btnGenerateFractal.Location = new System.Drawing.Point(823, 95);
+            this.btnGenerateFractal.Location = new System.Drawing.Point(890, 91);
             this.btnGenerateFractal.Name = "btnGenerateFractal";
             this.btnGenerateFractal.Size = new System.Drawing.Size(148, 35);
             this.btnGenerateFractal.TabIndex = 1;
@@ -49,14 +49,14 @@
             // 
             this.pictureBox.Location = new System.Drawing.Point(12, 12);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(805, 730);
+            this.pictureBox.Size = new System.Drawing.Size(869, 730);
             this.pictureBox.TabIndex = 2;
             this.pictureBox.TabStop = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(820, 48);
+            this.label1.Location = new System.Drawing.Point(887, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(151, 16);
             this.label1.TabIndex = 3;
@@ -64,7 +64,7 @@
             // 
             // textBoxIterations
             // 
-            this.textBoxIterations.Location = new System.Drawing.Point(823, 67);
+            this.textBoxIterations.Location = new System.Drawing.Point(890, 63);
             this.textBoxIterations.Name = "textBoxIterations";
             this.textBoxIterations.Size = new System.Drawing.Size(145, 22);
             this.textBoxIterations.TabIndex = 4;
@@ -73,7 +73,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(980, 754);
+            this.ClientSize = new System.Drawing.Size(1047, 754);
             this.Controls.Add(this.textBoxIterations);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox);
