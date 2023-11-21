@@ -154,15 +154,15 @@ namespace IndividualTaskGUI
 
             if (double.TryParse(inputText, out newSecondsCoefficient))
             {
-                if (newSecondsCoefficient < -1000000)
+                if (newSecondsCoefficient < -100000)
                 {
-                    MessageBox.Show("Коэффициент должен не может быть меньше -1.000.000", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Коэффициент должен не может быть меньше -100 000", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (newSecondsCoefficient > 1000000)
+                if (newSecondsCoefficient > 100000)
                 {
-                    MessageBox.Show("Коэффициент не может быть больше 1.000.000", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Коэффициент не может быть больше 100 000", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -187,8 +187,8 @@ namespace IndividualTaskGUI
                 "Раздел 'Коэффициент скорости движения секундной стрелки'\n" +
                 "   - Содержить поле для коэффициента скорости движения секундной стрелки\n" +
                 "   Ограничения поля скорости движения секундной стрелки:\n" +
-                "       - Коэффициент не может быть больше 1.000.000\n" +
-                "       - Коэффициент не может быть меньше -1.000.000\n\n" +
+                "       - Коэффициент не может быть больше 100 000\n" +
+                "       - Коэффициент не может быть меньше -100 000\n\n" +
                 "Раздел 'Смена цвета стрелок'\n" +
                 "   - Позволяет изменить цвет стрелки по названию соответсвующей кнопки\n\n" +
                 "Раздел 'Смена цвета внутренних элементов'\n" +
