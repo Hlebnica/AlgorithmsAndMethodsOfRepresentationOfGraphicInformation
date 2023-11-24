@@ -21,6 +21,7 @@ namespace Fractals
         {
             if (int.TryParse(textBoxIterations.Text, out int maxIterations))
             {
+                if (maxIterations < 0) { MessageBox.Show("Число должно быть больше 0", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
                 double zoom = 250;
                 double offsetX = pictureBox.Width / 2.0 + 135;
                 double offsetY = pictureBox.Height / 2.0;
@@ -30,7 +31,7 @@ namespace Fractals
             }
             else
             {
-                MessageBox.Show("Введите корректное число для уровней вложенности.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Введите корректное число для уровней вложенности", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -102,7 +103,5 @@ namespace Fractals
                 return Color.FromArgb(255, (int)hue % 256, 0, 0);
             }
         }
-
-
     }
 }
