@@ -21,7 +21,7 @@ namespace Fractals
         {
             if (int.TryParse(textBoxIterations.Text, out int maxIterations))
             {
-                if (maxIterations < 0) { MessageBox.Show("Число должно быть больше 0", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                if (maxIterations <= 1) { MessageBox.Show("Число должно быть больше 1", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
                 double zoom = 250;
                 double offsetX = pictureBox.Width / 2.0 + 135;
                 double offsetY = pictureBox.Height / 2.0;

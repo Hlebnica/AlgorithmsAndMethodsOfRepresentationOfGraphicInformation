@@ -37,7 +37,7 @@
             // 
             // btnGenerateFractal
             // 
-            this.btnGenerateFractal.Location = new System.Drawing.Point(890, 62);
+            this.btnGenerateFractal.Location = new System.Drawing.Point(890, 78);
             this.btnGenerateFractal.Name = "btnGenerateFractal";
             this.btnGenerateFractal.Size = new System.Drawing.Size(148, 35);
             this.btnGenerateFractal.TabIndex = 1;
@@ -58,13 +58,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(887, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 16);
+            this.label1.Size = new System.Drawing.Size(151, 32);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Количество итераций";
+            this.label1.Text = "Количество итераций\r\n(Число больше 1)";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textBoxIterations
             // 
-            this.textBoxIterations.Location = new System.Drawing.Point(890, 34);
+            this.textBoxIterations.Location = new System.Drawing.Point(890, 50);
             this.textBoxIterations.Name = "textBoxIterations";
             this.textBoxIterations.Size = new System.Drawing.Size(148, 22);
             this.textBoxIterations.TabIndex = 4;
@@ -79,7 +80,7 @@
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.btnGenerateFractal);
             this.Name = "Form1";
-            this.Text = "Старостенок Дмитрий КЭ-403 Фракталы";
+            this.Text = "Старостенок Дмитрий КЭ-403 Фрактал Мандельброта";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
